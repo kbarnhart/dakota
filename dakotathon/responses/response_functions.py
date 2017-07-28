@@ -99,6 +99,11 @@ class ResponseFunctions(ResponsesBase):
         for rd in descriptors:
             s += ' {!r}'.format(rd)
         s += '\n' \
+        if self.weights is not None:
+            s += '    weights ='
+            for wt in self.weights:
+                s += ' {!r}'.format(wt)
+        s += '\n' \
              + '  {}\n'.format(self.gradients) \
              + '  {}\n'.format(self.hessians)
         return(s)
