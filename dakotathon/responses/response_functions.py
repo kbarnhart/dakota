@@ -93,15 +93,18 @@ class ResponseFunctions(ResponsesBase):
 
         """
         descriptors = to_iterable(self.response_descriptors)
+        
         s = ResponsesBase.__str__(self)
         s += '  response_functions = {}\n'.format(len(descriptors))
         s += '    response_descriptors ='
         for rd in descriptors:
             s += ' {!r}'.format(rd)
-        s += '\n' \
+        s += '\n'
+        
         if self.weights is not None:
+            weights = to_iterable(self.weights)
             s += '    weights ='
-            for wt in self.weights:
+            for wt in weights:
                 s += ' {!r}'.format(wt)
         s += '\n' \
              + '  {}\n'.format(self.gradients) \
