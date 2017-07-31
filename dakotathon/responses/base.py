@@ -16,6 +16,8 @@ class ResponsesBase(object):
                  weights=None,
                  gradients='no_gradients',
                  hessians='no_hessians',
+                 method_source=None,
+                 interval_type=None,
                  **kwargs):
         """Create a default response.
 
@@ -31,13 +33,18 @@ class ResponsesBase(object):
             Gradient type (default is 'no_gradients').
         hessians : str, optional
             Hessian type (default is 'no_hessians').
-
+        method_source : str, optional (defalt is 'dakota')
+            Specify which finite difference routine is used
+        interval_type : str, optional (default is 'forward')
+            Specify how to compute gradients and hessians
         """
         self.responses = responses
         self._response_descriptors = response_descriptors
         self._weights = weights
         self.gradients = gradients
         self.hessians = hessians
+        self.method_source = method_source
+        self.interval_type = interval_type
 
     @property
     def response_descriptors(self):

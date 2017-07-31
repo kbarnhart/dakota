@@ -1,15 +1,15 @@
-"""Implementation of the Dakota response_function response type."""
+"""Implementation of the Dakota calibration_terms response type."""
 
 from .base import ResponsesBase
 from ..utils import to_iterable
 
 
-classname = 'ResponseFunctions'
+classname = 'CalibrationTerms'
 
 
-class ResponseFunctions(ResponsesBase):
+class CalibrationTerms(ResponsesBase):
 
-    """Define attributes for Dakota response functions."""
+    """Define attributes for Dakota calibration terms."""
 
     def __init__(self,
                  response_descriptors=('y1',),
@@ -93,12 +93,25 @@ class ResponseFunctions(ResponsesBase):
 
         """
         descriptors = to_iterable(self.response_descriptors)
+
         s = ResponsesBase.__str__(self)
-        s += '  response_functions = {}\n'.format(len(descriptors))
+        s += '  calibration_terms = {}\n'.format(len(descriptors))
         s += '    response_descriptors ='
         for rd in descriptors:
             s += ' {!r}'.format(rd)
+        s += '\n'
+
+        if self.weights is not None:
+            weights = to_iterable(self.weights)
+            s += '    weights ='
+            for wt in weights:
+                s += ' {!r}'.format(wt)
         s += '\n' \
              + '  {}\n'.format(self.gradients) \
              + '  {}\n'.format(self.hessians)
+        if self.method_source is not None:
+            s + '  {}\n'.format(self.method_source)
+        if self.interval_type is not None:
+            s + '  {}\n'.format(self.interval_type)
+        s += '\n'
         return(s)
