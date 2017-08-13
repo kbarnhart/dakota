@@ -13,8 +13,11 @@ class ResponsesBase(object):
     def __init__(self,
                  responses='response_functions',
                  response_descriptors=(),
+                 weights=None,
                  gradients='no_gradients',
                  hessians='no_hessians',
+                 method_source=None,
+                 interval_type=None,
                  **kwargs):
         """Create a default response.
 
@@ -24,21 +27,34 @@ class ResponsesBase(object):
             The Dakota response type (default is 'response_functions').
         response_descriptors : str or tuple or list of str, optional
             Labels attached to the responses.
+        weights : str or tuple or list of str, optional
+            Weights to use with responces.
         gradients : str, optional
             Gradient type (default is 'no_gradients').
         hessians : str, optional
             Hessian type (default is 'no_hessians').
-
+        method_source : str, optional (defalt is 'dakota')
+            Specify which finite difference routine is used
+        interval_type : str, optional (default is 'forward')
+            Specify how to compute gradients and hessians
         """
         self.responses = responses
         self._response_descriptors = response_descriptors
+        self._weights = weights
         self.gradients = gradients
         self.hessians = hessians
+        self.method_source = method_source
+        self.interval_type = interval_type
 
     @property
     def response_descriptors(self):
         """Labels attached to Dakota responses."""
         return self._response_descriptors
+    
+    @property
+    def weights(self):
+        """Weights attached to Dakota responses."""
+        return self._weights
 
     @response_descriptors.setter
     def response_descriptors(self, value):
@@ -55,6 +71,23 @@ class ResponsesBase(object):
         if not isinstance(value, (tuple, list)):
             raise TypeError("Descriptors must be a string, tuple or list")
         self._response_descriptors = value
+
+    @weights.setter
+    def weights(self, value):
+        """Set weights for Dakota responses.
+            
+            Parameters
+            ----------
+            value : str or list or tuple of str
+            The new weights.
+            
+            """
+        if type(value) is str:
+            value = (value,)
+        if not isinstance(value, (tuple, list)):
+            raise TypeError("Descriptors must be a string, tuple or list")
+        self._weights = value
+
 
     def __str__(self):
         """Define the responses block of a Dakota input file."""

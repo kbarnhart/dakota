@@ -1,0 +1,117 @@
+"""Implementation of the Dakota calibration_terms response type."""
+
+from .base import ResponsesBase
+from ..utils import to_iterable
+
+
+classname = 'CalibrationTerms'
+
+
+class CalibrationTerms(ResponsesBase):
+
+    """Define attributes for Dakota calibration terms."""
+
+    def __init__(self,
+                 response_descriptors=('y1',),
+                 response_files=(),
+                 response_statistics=('mean',),
+                 **kwargs):
+        """Create a response using response functions.
+
+        Parameters
+        ----------
+        response_descriptors : str or tuple or list of str, optional
+            Labels attached to the responses.
+        response_files : str or tuple or list of str, optional
+            Model output files from which responses are calculated.
+        response_statistics : str or tuple or list of str, optional
+            Statistics used to generate responses.
+        **kwargs
+            Optional keyword arguments.
+
+        Examples
+        --------
+        Create a ResponseFunctions instance:
+
+        >>> f = ResponseFunctions()
+
+        """
+        ResponsesBase.__init__(self, **kwargs)
+        self.responses = self.__module__.rsplit('.')[-1]
+        self._response_descriptors = response_descriptors
+        self._response_files = response_files
+        self._response_statistics = response_statistics
+
+    @property
+    def response_files(self):
+        """Model output files used in Dakota responses."""
+        return self._response_files
+
+    @response_files.setter
+    def response_files(self, value):
+        """Set model output files used in Dakota responses.
+
+        Parameters
+        ----------
+        value : str, or list or tuple of str
+          The new response files.
+
+        """
+        if type(value) is str:
+            value = (value,)
+        if not isinstance(value, (tuple, list)):
+            raise TypeError("Response files must be a string, tuple, or list")
+        self._response_files = value
+
+    @property
+    def response_statistics(self):
+        """Statistics used to calculate Dakota responses."""
+        return self._response_statistics
+
+    @response_statistics.setter
+    def response_statistics(self, value):
+        """Set statistics used to calculate Dakota responses.
+
+        Parameters
+        ----------
+        value : str, or list or tuple of str
+          The new response statistics.
+
+        """
+        if type(value) is str:
+            value = (value,)
+        if not isinstance(value, (tuple, list)):
+            raise TypeError("Response statistics must be a string, tuple, or list")
+        self._response_statistics = value
+
+    def __str__(self):
+        """Define the responses block of a Dakota input file.
+
+        See Also
+        --------
+        dakotathon.responses.base.ResponsesBase.__str__
+
+        """
+        descriptors = to_iterable(self.response_descriptors)
+
+        s = ResponsesBase.__str__(self)
+        s += '  calibration_terms = {}\n'.format(len(descriptors))
+        s += '    response_descriptors ='
+        for rd in descriptors:
+            s += ' {!r}'.format(rd)
+        s += '\n'
+
+        if self.weights is not None:
+            weights = to_iterable(self.weights)
+            s += '    weights ='
+            for wt in weights:
+                s += ' {!r}'.format(wt)
+        s += '\n' \
+             + '  {}\n'.format(self.gradients) \
+             + '  {}\n'.format(self.hessians)
+        if self.method_source is not None:
+            s + '  {}\n'.format(self.method_source)
+        if self.interval_type is not None:
+            s + '  {}\n'.format(self.interval_type)
+        s += '\n'
+        return(s)
