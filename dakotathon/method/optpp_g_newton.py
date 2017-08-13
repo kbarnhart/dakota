@@ -176,7 +176,6 @@ class OptppGNewton(MethodBase):
                  max_step=None,
                  gradient_tolerance=None,
                  max_iterations=None,
-                 convergence_tolerance=None,
                  speculative=None,
                  max_function_evaluations=None,
                  scaling=None,
@@ -335,14 +334,7 @@ class OptppGNewton(MethodBase):
                                  'not an integer.')
 
         # check and set convergence_tolerance.
-        if convergence_tolerance is None:
-            self._convergence_tolerance = convergence_tolerance
-        else:
-            self._convergence_tolerance = convergence_tolerance
-            try:
-                self._convergence_tolerance = float(convergence_tolerance)
-            except ValueError:
-                raise ValueError('convergence_tolerance must be convertable to float')
+        #already done by base
 
         # check and set speculative.
         # this is not checked b/c KRB not certain what the options are and
@@ -471,9 +463,6 @@ class OptppGNewton(MethodBase):
         if self.max_iterations is not None:
             s += '    max_iterations = '
             s += '{}\n'.format(self.max_iterations)
-        if self.convergence_tolerance is not None:
-            s += '    convergence_tolerance = '
-            s += '{}\n'.format(self.convergence_tolerance)
         # if self.speculative is not None:
         #     s += '    speculative = '
         #     s += '{}\n'.format(self.speculative)
