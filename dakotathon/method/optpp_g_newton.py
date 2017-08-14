@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #! /usr/bin/env python
 # Katy Barnhart; begun July 2017
 """Implementation of a Dakota Gauss Newton Optimization study.
