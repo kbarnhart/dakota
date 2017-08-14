@@ -190,7 +190,7 @@ class OptppGNewton(MethodBase):
         When interfaced with the unconstrained, bound-constrained, and nonlinear
         interior point full-Newton optimizers from the OPT++ library, it
         provides a Gauss-Newton least squares capability which – on
-        zero-residual test problems – can exhibit quadratic convergence rates
+        zero residual test problems can exhibit quadratic convergence rates
         near the solution. (Real problems almost never have zero residuals,
         i.e., perfect fits.)
 
